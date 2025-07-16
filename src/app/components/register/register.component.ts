@@ -1,0 +1,215 @@
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  template: `
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-md w-full space-y-8">
+        <div>
+          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
+          <p class="mt-2 text-center text-sm text-gray-600">
+            Or
+            <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+              sign in to your existing account
+            </a>
+          </p>
+        </div>
+        
+        <form class="mt-8 space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div class="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label for="email" class="sr-only">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                formControlName="email"
+                required
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                [class.border-red-500]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                placeholder="Email address"
+              />
+              <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="firstName" class="sr-only">First Name</label>
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                formControlName="firstName"
+                required
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                [class.border-red-500]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+                placeholder="First Name"
+              />
+              <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="registerForm.get('firstName')?.errors?.['required']">First name is required</span>
+                <span *ngIf="registerForm.get('firstName')?.errors?.['maxlength']">First name must be less than 100 characters</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="lastName" class="sr-only">Last Name</label>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                formControlName="lastName"
+                required
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                [class.border-red-500]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+                placeholder="Last Name"
+              />
+              <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="registerForm.get('lastName')?.errors?.['required']">Last name is required</span>
+                <span *ngIf="registerForm.get('lastName')?.errors?.['maxlength']">Last name must be less than 100 characters</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="password" class="sr-only">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                formControlName="password"
+                required
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                [class.border-red-500]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                placeholder="Password"
+              />
+              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+                <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="confirmPassword" class="sr-only">Confirm Password</label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                formControlName="confirmPassword"
+                required
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                [class.border-red-500]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+                placeholder="Confirm Password"
+              />
+              <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
+                <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+                <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="text-red-500 text-sm text-center">
+            {{ errorMessage }}
+          </div>
+
+          <div *ngIf="successMessage" class="text-green-500 text-sm text-center">
+            {{ successMessage }}
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              [disabled]="registerForm.invalid || isLoading"
+              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span *ngIf="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </span>
+              {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `
+})
+export class RegisterComponent {
+  registerForm: FormGroup;
+  isLoading = false;
+  errorMessage = '';
+  successMessage = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      firstName: ['', [Validators.required, Validators.maxLength(100)]],
+      lastName: ['', [Validators.required, Validators.maxLength(100)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    
+    if (confirmPassword?.errors?.['passwordMismatch']) {
+      delete confirmPassword.errors['passwordMismatch'];
+      if (Object.keys(confirmPassword.errors).length === 0) {
+        confirmPassword.setErrors(null);
+      }
+    }
+    
+    return null;
+  }
+
+  onSubmit(): void {
+    if (this.registerForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      const { confirmPassword, ...registerData } = this.registerForm.value;
+
+      this.authService.register(registerData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.successMessage = 'Account created successfully! Redirecting to dashboard...';
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 2000);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          if (error.error?.message) {
+            this.errorMessage = error.error.message;
+          } else if (error.status === 400) {
+            this.errorMessage = 'Email already exists or invalid data provided.';
+          } else {
+            this.errorMessage = 'Registration failed. Please try again.';
+          }
+        }
+      });
+    }
+  }
+}
