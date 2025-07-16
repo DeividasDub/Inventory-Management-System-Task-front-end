@@ -9,6 +9,7 @@ import { RegisterRequest, LoginRequest, AuthResponse, User } from '../models/aut
 export class AuthService {
   private readonly API_URL = 'http://localhost:5065/api/auth';
   //test
+  //Testas
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
