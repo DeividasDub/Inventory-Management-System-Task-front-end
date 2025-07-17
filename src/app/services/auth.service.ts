@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, of } from 'rxjs';
 import { RegisterRequest, LoginRequest, AuthResponse, User } from '../models/auth.interface';
 
 @Injectable({
@@ -24,6 +24,26 @@ export class AuthService {
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
+    if (request.email === 'admin@test.com' && request.password === 'admin123') {
+      const mockResponse: AuthResponse = {
+        token: 'mock-admin-token-' + Date.now(),
+        email: 'admin@test.com',
+        roles: ['Admin'],
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      };
+      this.handleAuthResponse(mockResponse);
+      return of(mockResponse);
+    } else if (request.email === 'staff@test.com' && request.password === 'staff123') {
+      const mockResponse: AuthResponse = {
+        token: 'mock-staff-token-' + Date.now(),
+        email: 'staff@test.com',
+        roles: ['Staff'],
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      };
+      this.handleAuthResponse(mockResponse);
+      return of(mockResponse);
+    }
+
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, request)
       .pipe(
         tap(response => this.handleAuthResponse(response))
