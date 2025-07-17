@@ -28,7 +28,7 @@
       <h2 class="text-lg font-medium text-gray-900">Suppliers List</h2>
       <button
         (click)="showCreateForm = !showCreateForm; editingSupplier = null; supplierForm.reset()"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+        class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
       >
         {{ showCreateForm ? 'Cancel' : 'Add Supplier' }}
       </button>
@@ -50,7 +50,7 @@
               id="name"
               type="text"
               formControlName="name"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched"
             />
             <div *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched" class="text-red-500 text-sm mt-1">
@@ -64,7 +64,7 @@
               id="contactName"
               type="text"
               formControlName="contactName"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="supplierForm.get('contactName')?.invalid && supplierForm.get('contactName')?.touched"
             />
             <div *ngIf="supplierForm.get('contactName')?.invalid && supplierForm.get('contactName')?.touched" class="text-red-500 text-sm mt-1">
@@ -78,7 +78,7 @@
               id="phone"
               type="tel"
               formControlName="phone"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched"
             />
             <div *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched" class="text-red-500 text-sm mt-1">
@@ -92,7 +92,7 @@
               id="email"
               type="email"
               formControlName="email"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched"
             />
             <div *ngIf="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
@@ -107,7 +107,7 @@
               id="address"
               formControlName="address"
               rows="3"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="supplierForm.get('address')?.invalid && supplierForm.get('address')?.touched"
             ></textarea>
             <div *ngIf="supplierForm.get('address')?.invalid && supplierForm.get('address')?.touched" class="text-red-500 text-sm mt-1">
@@ -126,7 +126,7 @@
             <button
               type="submit"
               [disabled]="supplierForm.invalid || isCreating"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+              class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
             >
               {{ isCreating ? 'Saving...' : (editingSupplier ? 'Update Supplier' : 'Create Supplier') }}
             </button>

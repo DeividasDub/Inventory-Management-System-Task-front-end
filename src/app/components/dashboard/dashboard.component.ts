@@ -7,7 +7,7 @@ import { User } from '../../models/auth.interface';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, RouterOutlet],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
