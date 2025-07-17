@@ -30,7 +30,7 @@
           <h2 class="text-lg font-medium text-gray-900">Select Product</h2>
           <button
             (click)="showCreateForm = !showCreateForm; movementForm.reset()"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
           >
             {{ showCreateForm ? 'Cancel' : 'Add Movement' }}
           </button>
@@ -44,7 +44,7 @@
             <select
               id="productSelect"
               (change)="onProductSelect($event)"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             >
               <option value="">Select a product to view movements</option>
               <option *ngFor="let product of products" [value]="product.id">
@@ -69,7 +69,7 @@
             <select
               id="productId"
               formControlName="productId"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="movementForm.get('productId')?.invalid && movementForm.get('productId')?.touched"
             >
               <option value="">Select a product</option>
@@ -87,7 +87,7 @@
             <select
               id="type"
               formControlName="type"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="movementForm.get('type')?.invalid && movementForm.get('type')?.touched"
             >
               <option value="">Select movement type</option>
@@ -106,7 +106,7 @@
               type="number"
               formControlName="quantity"
               min="1"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="movementForm.get('quantity')?.invalid && movementForm.get('quantity')?.touched"
             />
             <div *ngIf="movementForm.get('quantity')?.invalid && movementForm.get('quantity')?.touched" class="text-red-500 text-sm mt-1">
@@ -121,7 +121,7 @@
               id="reason"
               formControlName="reason"
               rows="3"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               [class.border-red-500]="movementForm.get('reason')?.invalid && movementForm.get('reason')?.touched"
               placeholder="Describe the reason for this stock movement..."
             ></textarea>
@@ -141,7 +141,7 @@
             <button
               type="submit"
               [disabled]="movementForm.invalid || isCreating"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+              class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
             >
               {{ isCreating ? 'Creating...' : 'Create Movement' }}
             </button>
