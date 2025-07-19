@@ -45,7 +45,7 @@ export class ProductsComponent implements OnInit {
       sku: ['', [Validators.required, Validators.maxLength(50)]],
       quantityInStock: [0, [Validators.required, Validators.min(0)]],
       price: [0, [Validators.required, Validators.min(0)]],
-      supplierId: ['', Validators.required]
+      supplierId: [null, Validators.required]
     });
 
     this.searchForm = this.fb.group({
@@ -92,8 +92,6 @@ export class ProductsComponent implements OnInit {
   onSearch(): void {
     this.isLoading = true;
     const searchRequest: ProductSearchRequest = this.searchForm.value;
-
-    console.log("Search Request - ", searchRequest);
 
     this.productService.searchProducts(searchRequest).subscribe({
       next: (products) => {
