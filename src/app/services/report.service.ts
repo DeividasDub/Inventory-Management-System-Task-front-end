@@ -8,7 +8,7 @@ import { StockMovement } from '../models/stock-movement.interface';
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = 'https://localhost:7001/api/report';
+  private apiUrl = 'https://localhost:44372/api/report';
 
   constructor(private http: HttpClient) {}
 

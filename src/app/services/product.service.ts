@@ -7,7 +7,7 @@ import { Product, CreateProductRequest, UpdateProductRequest, ProductSearchReque
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'https://localhost:7001/api/product';
+  private apiUrl = 'https://localhost:44372/api/product';
 
   constructor(private http: HttpClient) {}
 

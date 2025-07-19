@@ -22,8 +22,8 @@ export class StockMovementsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   showCreateForm = false;
-  selectedProductId: number | null = null;
-
+  selectedProduct: Product | null = null;
+  selectedProductId: number | null = null;  
   StockMovementType = StockMovementType;
 
   constructor(
@@ -32,8 +32,8 @@ export class StockMovementsComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.movementForm = this.fb.group({
-      productId: ['', Validators.required],
-      type: ['', Validators.required],
+      productId: [null, Validators.required],
+      type: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       reason: ['', [Validators.required, Validators.maxLength(500)]]
     });
@@ -69,36 +69,54 @@ export class StockMovementsComponent implements OnInit {
   }
 
   onCreateMovement(): void {
-    if (this.movementForm.valid) {
-      this.isCreating = true;
-      const movementData: CreateStockMovementRequest = this.movementForm.value;
-      
-      this.stockMovementService.createStockMovement(movementData).subscribe({
-        next: (movement) => {
-          this.successMessage = 'Stock movement created successfully';
-          this.movementForm.reset();
-          this.showCreateForm = false;
-          if (this.selectedProductId) {
-            this.loadStockMovements(this.selectedProductId);
-          }
-          this.isCreating = false;
-        },
-        error: (error) => {
-          this.errorMessage = 'Failed to create stock movement';
-          this.isCreating = false;
-        }
-      });
+  if (this.movementForm.valid) {
+    const movementData: CreateStockMovementRequest = this.movementForm.value;
+
+    // Tikriname ar per didelis OUT kiekis
+    if (
+      movementData.type === StockMovementType.OUT &&
+      this.selectedProduct &&
+      movementData.quantity > this.selectedProduct.quantityInStock
+    ) {
+      this.errorMessage = `Cannot remove more than available stock (${this.selectedProduct.quantityInStock})`;
+      return;
     }
+
+    this.isCreating = true;
+
+    console.log("Movement - ", movementData);
+
+    this.stockMovementService.createStockMovement(movementData).subscribe({
+      next: (movement) => {
+        this.successMessage = 'Stock movement created successfully';
+        this.movementForm.reset();
+        this.showCreateForm = false;
+        if (this.selectedProductId) {
+          this.loadStockMovements(this.selectedProductId);
+        }
+        this.isCreating = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Failed to create stock movement';
+        this.isCreating = false;
+      }
+    });
   }
+}
 
   onProductSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const productId = +target.value;
-    if (productId) {
-      this.selectedProductId = productId;
-      this.loadStockMovements(productId);
-    }
+  const target = event.target as HTMLSelectElement;
+  const selectedId = +target.value;
+
+  if (selectedId) {
+    this.selectedProductId = selectedId;
+    this.selectedProduct = this.products.find(p => p.id === selectedId) || null;
+    this.loadStockMovements(selectedId);
+  } else {
+    this.selectedProductId = null;
+    this.selectedProduct = null;
   }
+}
 
   cancelCreate(): void {
     this.movementForm.reset();

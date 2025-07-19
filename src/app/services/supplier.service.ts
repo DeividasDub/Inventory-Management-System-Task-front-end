@@ -7,7 +7,7 @@ import { Supplier, CreateSupplierRequest, UpdateSupplierRequest } from '../model
   providedIn: 'root'
 })
 export class SupplierService {
-  private apiUrl = 'https://localhost:7001/api/supplier';
+  private apiUrl = 'https://localhost:44372/api/supplier';
 
   constructor(private http: HttpClient) {}
 
