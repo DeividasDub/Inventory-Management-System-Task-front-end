@@ -249,7 +249,7 @@
                 No products found
               </td>
             </tr>
-            <tr *ngFor="let product of filteredProducts" class="hover:bg-gray-50">
+            <tr *ngFor="let product of paginatedProducts" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                 {{ product.name }}
               </td>
@@ -288,6 +288,22 @@
           </tbody>
         </table>
       </div>
+      
+      <app-pagination
+        [totalItems]="filteredProducts.length"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
     </div>
+
+    <app-delete-confirmation-modal
+      [isOpen]="showDeleteModal"
+      [title]="'Delete Product'"
+      [message]="'Are you sure you want to delete'"
+      [itemName]="productToDelete?.name || ''"
+      (confirmed)="onConfirmDelete()"
+      (cancelled)="onCancelDelete()">
+    </app-delete-confirmation-modal>
   </div>
 </div>

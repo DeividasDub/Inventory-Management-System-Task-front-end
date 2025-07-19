@@ -172,7 +172,7 @@
                 No suppliers found
               </td>
             </tr>
-            <tr *ngFor="let supplier of suppliers" class="hover:bg-gray-50">
+            <tr *ngFor="let supplier of paginatedSuppliers" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                 {{ supplier.name }}
               </td>
@@ -209,6 +209,22 @@
           </tbody>
         </table>
       </div>
+      
+      <app-pagination
+        [totalItems]="suppliers.length"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
     </div>
+
+    <app-delete-confirmation-modal
+      [isOpen]="showDeleteModal"
+      [title]="'Delete Supplier'"
+      [message]="'Are you sure you want to delete'"
+      [itemName]="supplierToDelete?.name || ''"
+      (confirmed)="onConfirmDelete()"
+      (cancelled)="onCancelDelete()">
+    </app-delete-confirmation-modal>
   </div>
 </div>

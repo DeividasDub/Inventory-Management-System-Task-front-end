@@ -6,16 +6,18 @@ import { StockMovementService } from '../../services/stock-movement.service';
 import { ProductService } from '../../services/product.service';
 import { StockMovement, CreateStockMovementRequest, StockMovementType } from '../../models/stock-movement.interface';
 import { Product } from '../../models/product.interface';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-stock-movements',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent],
   templateUrl: './stock-movements.component.html'
 })
 export class StockMovementsComponent implements OnInit {
   products: Product[] = [];
   stockMovements: StockMovement[] = [];
+  paginatedStockMovements: StockMovement[] = [];
   movementForm: FormGroup;
   isLoading = false;
   isCreating = false;
@@ -23,7 +25,9 @@ export class StockMovementsComponent implements OnInit {
   successMessage = '';
   showCreateForm = false;
   selectedProduct: Product | null = null;
-  selectedProductId: number | null = null;  
+  selectedProductId: number | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
   StockMovementType = StockMovementType;
 
   constructor(
@@ -59,6 +63,8 @@ export class StockMovementsComponent implements OnInit {
     this.stockMovementService.getProductStockMovements(productId, 20).subscribe({
       next: (movements) => {
         this.stockMovements = movements;
+        this.currentPage = 1;
+        this.updatePaginatedStockMovements();
         this.isLoading = false;
       },
       error: (error) => {
@@ -126,5 +132,16 @@ export class StockMovementsComponent implements OnInit {
   clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePaginatedStockMovements();
+  }
+
+  private updatePaginatedStockMovements(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedStockMovements = this.stockMovements.slice(startIndex, endIndex);
   }
 }

@@ -6,23 +6,29 @@ import { ReportService } from '../../services/report.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.interface';
 import { StockMovement } from '../../models/stock-movement.interface';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent],
   templateUrl: './reports.component.html'
 })
 export class ReportsComponent implements OnInit {
-  lowStockProducts: Product[] = [];
-  stockMovements: StockMovement[] = [];
   products: Product[] = [];
+  lowStockProducts: Product[] = [];
+  paginatedLowStockProducts: Product[] = [];
+  stockMovements: StockMovement[] = [];
+  paginatedStockMovements: StockMovement[] = [];
   lowStockForm: FormGroup;
   movementForm: FormGroup;
   isLoadingLowStock = false;
   isLoadingMovements = false;
   errorMessage = '';
   selectedProductId: number | null = null;
+  lowStockCurrentPage: number = 1;
+  movementsCurrentPage: number = 1;
+  itemsPerPage: number = 10;
 
   constructor(
     private reportService: ReportService,
@@ -62,6 +68,8 @@ export class ReportsComponent implements OnInit {
     this.reportService.getLowStockProducts(threshold).subscribe({
       next: (products) => {
         this.lowStockProducts = products;
+        this.lowStockCurrentPage = 1;
+        this.updatePaginatedLowStockProducts();
         this.isLoadingLowStock = false;
       },
       error: (error) => {
@@ -86,6 +94,8 @@ export class ReportsComponent implements OnInit {
     this.reportService.getProductStockMovements(productId, count).subscribe({
       next: (movements) => {
         this.stockMovements = movements;
+        this.movementsCurrentPage = 1;
+        this.updatePaginatedStockMovements();
         this.isLoadingMovements = false;
       },
       error: (error) => {
@@ -103,5 +113,27 @@ export class ReportsComponent implements OnInit {
 
   clearMessages(): void {
     this.errorMessage = '';
+  }
+
+  onLowStockPageChange(page: number): void {
+    this.lowStockCurrentPage = page;
+    this.updatePaginatedLowStockProducts();
+  }
+
+  onMovementsPageChange(page: number): void {
+    this.movementsCurrentPage = page;
+    this.updatePaginatedStockMovements();
+  }
+
+  private updatePaginatedLowStockProducts(): void {
+    const startIndex = (this.lowStockCurrentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedLowStockProducts = this.lowStockProducts.slice(startIndex, endIndex);
+  }
+
+  private updatePaginatedStockMovements(): void {
+    const startIndex = (this.movementsCurrentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedStockMovements = this.stockMovements.slice(startIndex, endIndex);
   }
 }

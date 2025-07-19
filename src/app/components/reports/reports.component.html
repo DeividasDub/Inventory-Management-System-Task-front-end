@@ -111,7 +111,7 @@
             </div>
             
             <div *ngIf="!isLoadingLowStock && lowStockProducts.length > 0" class="space-y-3">
-              <div *ngFor="let product of lowStockProducts" class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+              <div *ngFor="let product of paginatedLowStockProducts" class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
                 <div>
                   <h4 class="text-sm font-medium text-gray-900">{{ product.name }}</h4>
                   <p class="text-sm text-gray-500">SKU: {{ product.sku }}</p>
@@ -124,6 +124,14 @@
                 </div>
               </div>
             </div>
+            
+            <app-pagination
+              *ngIf="!isLoadingLowStock && lowStockProducts.length > itemsPerPage"
+              [totalItems]="lowStockProducts.length"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="lowStockCurrentPage"
+              (pageChange)="onLowStockPageChange($event)">
+            </app-pagination>
           </div>
         </div>
       </div>
@@ -194,7 +202,7 @@
                 Recent movements for {{ getSelectedProductName() }}
               </h4>
               
-              <div *ngFor="let movement of stockMovements" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div *ngFor="let movement of paginatedStockMovements" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div class="flex-1">
                   <div class="flex items-center space-x-2">
                     <span [class]="movement.type === 'IN' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'" 
@@ -208,6 +216,14 @@
                 </div>
               </div>
             </div>
+            
+            <app-pagination
+              *ngIf="!isLoadingMovements && stockMovements.length > itemsPerPage"
+              [totalItems]="stockMovements.length"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="movementsCurrentPage"
+              (pageChange)="onMovementsPageChange($event)">
+            </app-pagination>
           </div>
         </div>
       </div>

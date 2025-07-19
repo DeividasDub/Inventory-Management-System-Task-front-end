@@ -4,15 +4,18 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { RouterModule } from '@angular/router';
 import { SupplierService } from '../../services/supplier.service';
 import { Supplier, CreateSupplierRequest, UpdateSupplierRequest } from '../../models/supplier.interface';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { DeleteConfirmationModalComponent } from '../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-suppliers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent, DeleteConfirmationModalComponent],
   templateUrl: './suppliers.component.html'
 })
 export class SuppliersComponent implements OnInit {
   suppliers: Supplier[] = [];
+  paginatedSuppliers: Supplier[] = [];
   supplierForm: FormGroup;
   isLoading = false;
   isCreating = false;
@@ -20,6 +23,10 @@ export class SuppliersComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   showCreateForm = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  showDeleteModal: boolean = false;
+  supplierToDelete: Supplier | null = null;
 
   constructor(
     private supplierService: SupplierService,
@@ -43,6 +50,7 @@ export class SuppliersComponent implements OnInit {
     this.supplierService.getAllSuppliers().subscribe({
       next: (suppliers) => {
         this.suppliers = suppliers;
+        this.updatePaginatedSuppliers();
         this.isLoading = false;
       },
       error: (error) => {
@@ -108,17 +116,31 @@ export class SuppliersComponent implements OnInit {
   }
 
   onDeleteSupplier(supplier: Supplier): void {
-    if (confirm(`Are you sure you want to delete ${supplier.name}?`)) {
-      this.supplierService.deleteSupplier(supplier.id).subscribe({
+    this.supplierToDelete = supplier;
+    this.showDeleteModal = true;
+  }
+
+  onConfirmDelete(): void {
+    if (this.supplierToDelete) {
+      this.supplierService.deleteSupplier(this.supplierToDelete.id).subscribe({
         next: () => {
           this.successMessage = 'Supplier deleted successfully';
+          this.showDeleteModal = false;
+          this.supplierToDelete = null;
           this.loadSuppliers();
         },
         error: (error) => {
           this.errorMessage = 'Failed to delete supplier';
+          this.showDeleteModal = false;
+          this.supplierToDelete = null;
         }
       });
     }
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteModal = false;
+    this.supplierToDelete = null;
   }
 
   cancelEdit(): void {
@@ -130,5 +152,16 @@ export class SuppliersComponent implements OnInit {
   clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePaginatedSuppliers();
+  }
+
+  private updatePaginatedSuppliers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedSuppliers = this.suppliers.slice(startIndex, endIndex);
   }
 }
