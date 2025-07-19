@@ -130,7 +130,7 @@ export class SuppliersComponent implements OnInit {
           this.loadSuppliers();
         },
         error: (error) => {
-          this.errorMessage = 'Failed to delete supplier';
+          this.errorMessage = 'Supplier not found or has associated products';
           this.showDeleteModal = false;
           this.supplierToDelete = null;
         }

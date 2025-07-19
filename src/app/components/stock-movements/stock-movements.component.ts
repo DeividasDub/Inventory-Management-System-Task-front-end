@@ -77,8 +77,7 @@ export class StockMovementsComponent implements OnInit {
   onCreateMovement(): void {
   if (this.movementForm.valid) {
     const movementData: CreateStockMovementRequest = this.movementForm.value;
-
-    // Tikriname ar per didelis OUT kiekis
+    
     if (
       movementData.type === StockMovementType.OUT &&
       this.selectedProduct &&
@@ -89,8 +88,6 @@ export class StockMovementsComponent implements OnInit {
     }
 
     this.isCreating = true;
-
-    console.log("Movement - ", movementData);
 
     this.stockMovementService.createStockMovement(movementData).subscribe({
       next: (movement) => {

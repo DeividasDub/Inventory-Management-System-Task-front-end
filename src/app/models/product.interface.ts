@@ -28,7 +28,7 @@ export interface UpdateProductRequest {
 export interface ProductSearchRequest {
   name?: string;
   sku?: string;
-  supplierId?: number;
+  supplierId?: number | null;
   lowStockOnly?: boolean;
   lowStockThreshold?: number;
 }
