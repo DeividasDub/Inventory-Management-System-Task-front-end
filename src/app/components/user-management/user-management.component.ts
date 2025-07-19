@@ -5,15 +5,18 @@ import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { RoleService } from '../../services/role.service';
 import { User, CreateUserRequest, UpdateUserRoleRequest, Role } from '../../models/user.interface';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { DeleteConfirmationModalComponent } from '../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent, DeleteConfirmationModalComponent],
   templateUrl: './user-management.component.html'
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
+  paginatedUsers: User[] = [];
   roles: Role[] = [];
   userForm: FormGroup;
   isLoading = false;
@@ -22,6 +25,10 @@ export class UserManagementComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   showCreateForm = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  showDeleteModal: boolean = false;
+  userToDelete: User | null = null;
 
   constructor(
     private userService: UserService,
@@ -47,6 +54,7 @@ export class UserManagementComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.updatePaginatedUsers();
         this.isLoading = false;
       },
       error: (error) => {
@@ -125,17 +133,31 @@ export class UserManagementComponent implements OnInit {
   }
 
   onDeleteUser(user: User): void {
-    if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
-      this.userService.deleteUser(user.id).subscribe({
+    this.userToDelete = user;
+    this.showDeleteModal = true;
+  }
+
+  onConfirmDelete(): void {
+    if (this.userToDelete) {
+      this.userService.deleteUser(this.userToDelete.id).subscribe({
         next: () => {
           this.successMessage = 'User deleted successfully';
+          this.showDeleteModal = false;
+          this.userToDelete = null;
           this.loadUsers();
         },
         error: (error) => {
           this.errorMessage = 'Failed to delete user';
+          this.showDeleteModal = false;
+          this.userToDelete = null;
         }
       });
     }
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteModal = false;
+    this.userToDelete = null;
   }
 
   cancelEdit(): void {
@@ -149,5 +171,16 @@ export class UserManagementComponent implements OnInit {
   clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePaginatedUsers();
+  }
+
+  private updatePaginatedUsers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedUsers = this.users.slice(startIndex, endIndex);
   }
 }

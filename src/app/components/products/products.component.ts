@@ -7,17 +7,20 @@ import { SupplierService } from '../../services/supplier.service';
 import { AuthService } from '../../services/auth.service';
 import { Product, CreateProductRequest, UpdateProductRequest, ProductSearchRequest } from '../../models/product.interface';
 import { Supplier } from '../../models/supplier.interface';
+import { PaginationComponent } from '../shared/pagination/pagination.component';
+import { DeleteConfirmationModalComponent } from '../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, PaginationComponent, DeleteConfirmationModalComponent],
   templateUrl: './products.component.html'
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
   suppliers: Supplier[] = [];
   filteredProducts: Product[] = [];
+  paginatedProducts: Product[] = [];
   productForm: FormGroup;
   searchForm: FormGroup;
   isLoading = false;
@@ -26,6 +29,10 @@ export class ProductsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   showCreateForm = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  showDeleteModal: boolean = false;
+  productToDelete: Product | null = null;
 
   constructor(
     private productService: ProductService,
@@ -61,6 +68,7 @@ export class ProductsComponent implements OnInit {
       next: (products) => {
         this.products = products;
         this.filteredProducts = products;
+        this.updatePaginatedProducts();
         this.isLoading = false;
       },
       error: (error) => {
@@ -90,6 +98,8 @@ export class ProductsComponent implements OnInit {
     this.productService.searchProducts(searchRequest).subscribe({
       next: (products) => {
         this.filteredProducts = products;
+        this.currentPage = 1;
+        this.updatePaginatedProducts();
         this.isLoading = false;
       },
       error: (error) => {
@@ -155,17 +165,31 @@ export class ProductsComponent implements OnInit {
   }
 
   onDeleteProduct(product: Product): void {
-    if (confirm(`Are you sure you want to delete ${product.name}?`)) {
-      this.productService.deleteProduct(product.id).subscribe({
+    this.productToDelete = product;
+    this.showDeleteModal = true;
+  }
+
+  onConfirmDelete(): void {
+    if (this.productToDelete) {
+      this.productService.deleteProduct(this.productToDelete.id).subscribe({
         next: () => {
           this.successMessage = 'Product deleted successfully';
+          this.showDeleteModal = false;
+          this.productToDelete = null;
           this.loadProducts();
         },
         error: (error) => {
           this.errorMessage = 'Failed to delete product';
+          this.showDeleteModal = false;
+          this.productToDelete = null;
         }
       });
     }
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteModal = false;
+    this.productToDelete = null;
   }
 
   cancelEdit(): void {
@@ -181,5 +205,16 @@ export class ProductsComponent implements OnInit {
   clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePaginatedProducts();
+  }
+
+  private updatePaginatedProducts(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
   }
 }
