@@ -19,6 +19,13 @@ export interface UpdateUserRoleRequest {
   roleId: number;
 }
 
+export interface UpdateUserRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  roleId: number;
+}
+
 export interface Role {
   id: number;
   name: string;

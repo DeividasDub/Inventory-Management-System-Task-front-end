@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { RoleService } from '../../services/role.service';
-import { User, CreateUserRequest, UpdateUserRoleRequest, Role } from '../../models/user.interface';
+import { User, CreateUserRequest, UpdateUserRoleRequest, UpdateUserRequest, Role } from '../../models/user.interface';
 import { PaginationComponent } from '../shared/pagination/pagination.component';
 import { DeleteConfirmationModalComponent } from '../shared/delete-confirmation-modal/delete-confirmation-modal.component';
 
@@ -113,11 +113,16 @@ export class UserManagementComponent implements OnInit {
   onUpdateUser(): void {
     if (this.userForm.valid && this.editingUser) {
       this.isCreating = true;
-      const roleUpdate: UpdateUserRoleRequest = { roleId: this.userForm.value.roleId };
+      const userUpdate: UpdateUserRequest = {
+        email: this.userForm.value.email,
+        firstName: this.userForm.value.firstName,
+        lastName: this.userForm.value.lastName,
+        roleId: this.userForm.value.roleId
+      };
       
-      this.userService.updateUserRole(this.editingUser.id, roleUpdate).subscribe({
+      this.userService.updateUser(this.editingUser.id, userUpdate).subscribe({
         next: (user) => {
-          this.successMessage = 'User role updated successfully';
+          this.successMessage = 'User updated successfully';
           this.userForm.reset();
           this.showCreateForm = false;
           this.editingUser = null;
@@ -125,7 +130,7 @@ export class UserManagementComponent implements OnInit {
           this.isCreating = false;
         },
         error: (error) => {
-          this.errorMessage = 'Failed to update user role';
+          this.errorMessage = 'Failed to update user';
           this.isCreating = false;
         }
       });
