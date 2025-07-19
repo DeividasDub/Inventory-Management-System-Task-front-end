@@ -141,8 +141,13 @@
       </div>
     </div>
 
+    <!-- Loader -->
+        <div *ngIf="isLoading" class="flex justify-center items-center min-h-[200px]">
+          <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-600"></div>
+        </div>
+
     <!-- Suppliers Table -->
-    <div class="bg-white shadow rounded-lg">
+    <div *ngIf="!isLoading" class="bg-white shadow rounded-lg">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">

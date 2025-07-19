@@ -31,7 +31,7 @@
           <button
             *ngIf="isAdmin()"
             (click)="showCreateForm = !showCreateForm; editingProduct = null; productForm.reset()"
-            class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-base font-medium transition-colors"
           >
             {{ showCreateForm ? 'Cancel' : 'Add Product' }}
           </button>
@@ -222,7 +222,11 @@
       </div>
       
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
+        <!-- Loader -->
+            <div *ngIf="isLoading" class="flex justify-center items-center min-h-[200px]">
+              <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-600"></div>
+            </div>
+        <table *ngIf="!isLoading" class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>

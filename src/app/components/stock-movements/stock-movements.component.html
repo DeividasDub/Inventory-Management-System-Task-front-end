@@ -174,8 +174,13 @@
       <div class="px-6 py-4 border-b border-gray-200">
         <h2 class="text-lg font-medium text-gray-900">Recent Stock Movements</h2>
       </div>
+
+      <!-- Loader -->
+        <div *ngIf="isLoading" class="flex justify-center items-center min-h-[200px]">
+          <div class="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-600"></div>
+        </div>
       
-      <div class="overflow-x-auto">
+      <div *ngIf="!isLoading" class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
