@@ -7,7 +7,7 @@ import { StockMovement, CreateStockMovementRequest } from '../models/stock-movem
   providedIn: 'root'
 })
 export class StockMovementService {
-  private apiUrl = 'https://localhost:7001/api/stockmovement';
+  private apiUrl = 'https://localhost:44372/api/stockmovement';
 
   constructor(private http: HttpClient) {}
 

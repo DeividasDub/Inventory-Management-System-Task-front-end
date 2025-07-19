@@ -44,7 +44,7 @@ export class ProductsComponent implements OnInit {
     this.searchForm = this.fb.group({
       name: [''],
       sku: [''],
-      supplierId: [''],
+      supplierId: [null],
       lowStockOnly: [false],
       lowStockThreshold: [10]
     });
@@ -83,6 +83,9 @@ export class ProductsComponent implements OnInit {
 
   onSearch(): void {
     const searchRequest: ProductSearchRequest = this.searchForm.value;
+
+    console.log("Search Request - ", searchRequest);
+
     this.productService.searchProducts(searchRequest).subscribe({
       next: (products) => {
         this.filteredProducts = products;

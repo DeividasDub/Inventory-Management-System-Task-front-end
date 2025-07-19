@@ -82,29 +82,29 @@
               Search
             </button>
           </div>
-        </form>
-        
-        <div class="mt-4 flex items-center space-x-4">
-          <label class="flex items-center">
-            <input
-              type="checkbox"
-              formControlName="lowStockOnly"
-              class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-            />
-            <span class="ml-2 text-sm text-gray-700">Low stock only</span>
-          </label>
-          
-          <div class="flex items-center space-x-2">
-            <label for="threshold" class="text-sm text-gray-700">Threshold:</label>
-            <input
-              id="threshold"
-              type="number"
-              formControlName="lowStockThreshold"
-              min="1"
-              class="w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-            />
+
+          <div class="mt-4 flex items-center space-x-4">
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                formControlName="lowStockOnly"
+                class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              />
+              <span class="ml-2 text-sm text-gray-700">Low stock only</span>
+            </label>
+            
+            <div class="flex items-center space-x-2">
+              <label for="threshold" class="text-sm text-gray-700">Threshold:</label>
+              <input
+                id="threshold"
+                type="number"
+                formControlName="lowStockThreshold"
+                min="1"
+                class="w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              />
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
 
