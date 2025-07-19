@@ -5,6 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardHomeComponent } from './components/dashboard-home/dashboard-home.component';
 import { ProductsComponent } from './components/products/products.component';
 import { SuppliersComponent } from './components/suppliers/suppliers.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 import { StockMovementsComponent } from './components/stock-movements/stock-movements.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { authGuard } from './guards/auth.guard';
@@ -22,6 +23,7 @@ export const routes: Routes = [
       { path: '', component: DashboardHomeComponent },
       { path: 'products', component: ProductsComponent },
       { path: 'suppliers', component: SuppliersComponent, canActivate: [adminGuard] },
+      { path: 'users', component: UserManagementComponent, canActivate: [adminGuard] },
       { path: 'stock', component: StockMovementsComponent },
       { path: 'reports', component: ReportsComponent }
     ]
