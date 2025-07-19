@@ -82,6 +82,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onSearch(): void {
+    this.isLoading = true;
     const searchRequest: ProductSearchRequest = this.searchForm.value;
 
     console.log("Search Request - ", searchRequest);
@@ -89,9 +90,11 @@ export class ProductsComponent implements OnInit {
     this.productService.searchProducts(searchRequest).subscribe({
       next: (products) => {
         this.filteredProducts = products;
+        this.isLoading = false;
       },
       error: (error) => {
         this.errorMessage = 'Search failed';
+        this.isLoading = false;
       }
     });
   }
