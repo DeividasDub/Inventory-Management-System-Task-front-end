@@ -45,6 +45,10 @@ export class StockMovementsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
+
+    this.movementForm.get('productId')?.valueChanges.subscribe(productId => {
+    this.selectedProduct = this.products.find(p => p.id === productId) || null;
+  });
   }
 
   loadProducts(): void {

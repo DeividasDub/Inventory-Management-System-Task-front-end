@@ -124,8 +124,12 @@
             </div>
           </div>
 
-          <small *ngIf="movementForm.get('type')?.value === StockMovementType.OUT && selectedProduct" class="text-gray-500">
+          <!-- <small *ngIf="movementForm.get('type')?.value === StockMovementType.OUT && selectedProduct" class="text-gray-500">
             Max available: {{ selectedProduct.quantityInStock }}
+          </small> -->
+
+          <small *ngIf="selectedProduct" class="text-gray-500">
+            Current stock: {{ selectedProduct.quantityInStock }}
           </small>
           
           <div class="md:col-span-2">
